@@ -11,6 +11,6 @@ fun HTML.index() {
         div {
             id = "root"
         }
-        script(src = "/static/template.js") {}
+        script(src = "/static/crawler.js") {}
     }
 }

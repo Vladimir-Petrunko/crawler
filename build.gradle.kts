@@ -15,7 +15,6 @@ plugins {
     kotlin("plugin.serialization") version "1.6.10"
 }
 
-group = "ru.diamant.rabbit"
 version = "1.0-SNAPSHOT"
 
 repositories {
@@ -47,12 +46,6 @@ kotlin {
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2")
             }
         }
-        val commonTest by getting {
-            dependencies {
-                implementation(kotlin("test"))
-            }
-        }
-
 
         val jvmMain by getting {
             dependencies {
