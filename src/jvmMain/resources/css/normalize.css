@@ -1,0 +1,126 @@
+* {
+    color: white;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+html {
+    height: 100%;
+    font-family: "Courier New", monospace;
+    background-image: url(../img/background.jpg);
+    background-size: cover;
+}
+
+nav {
+    font-size: 18pt;
+    font-weight: bold;
+    margin-bottom: 32px;
+    margin-top: 16px;
+}
+
+nav a {
+    margin: 12px;
+    padding: 12px;
+    background-color: rgba(255, 255, 255, 0.2);
+    text-underline: none;
+    border-radius: 12px;
+    font-style: italic;
+    font-family: "Futura", sans-serif;
+}
+
+nav a:visited {
+    color: white;
+}
+
+button {
+    padding: 8px;
+    font-size: 14pt;
+    font-weight: bold;
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid black;
+    margin: 10px;
+    border-radius: 5px;
+}
+
+#crawl-form {
+    background-color: rgba(0, 0, 0, 0.35);
+    border-radius: 25px;
+    margin-top: 15px;
+    width: 33%;
+    margin-left: 33%;
+    padding-top: 15px;
+}
+
+input {
+    padding: 6px;
+    font-size: 12pt;
+    color: darkslategray;
+    margin: 12pt;
+    width: 85%;
+    border-radius: 5px;
+    font-family: "Courier New", monospace;
+}
+
+#historyList button {
+    padding: 6px;
+    font-size: 12pt;
+    color: white;
+    margin: 4pt;
+    width: 60%;
+    border-radius: 5px;
+    font-family: "Courier New", monospace;
+}
+
+button:hover, nav a:hover {
+    cursor: pointer;
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+button:active, nav a:active {
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+#imageBasket, #historyList {
+    height: 300px;
+    scroll-margin: 15px;
+    position: relative;
+    overflow: auto;
+    margin-top: 30px;
+}
+
+#imageBasket img {
+    width: 100px;
+    height: 100px;
+    margin: 5px;
+    border: 4px gray ridge;
+}
+
+#mainInfo, h2 {
+    font-family: "Arial", sans-serif;
+    font-weight: bold;
+    background-color: rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    border-radius: 3px;
+}
+
+img#loaderImage {
+    border: none;
+}
+
+#historyContainer {
+    height: 300px;
+}
+
+.historyItem {
+    padding: 3px;
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+    margin: 6px;
+}
+
+.subHistoryItem {
+    background-color: rgba(0, 0, 0, 0.1);
+    margin: 3px;
+}
