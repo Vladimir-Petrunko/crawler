@@ -15,30 +15,28 @@ class HistoryManager {
         private val database = client.getDatabase("@localhost")
         private val statisticCollection = database.getCollection<Statistic>()
 
-        fun saveStatistics(statisticRequest: StatisticRequest, statisticResponse: StatisticResponse) {
+        fun saveStatistics(statisticRequest: StatisticRequest, statisticResponse: StatisticResponse) =
             runBlocking {
                 statisticCollection.insertOne(Statistic(statisticRequest, statisticResponse))
             }
-        }
 
-        fun getStatistics(statisticRequest: StatisticRequest): StatisticResponse? {
-            val entry: Statistic?
+        fun getStatistics(statisticRequest: StatisticRequest): StatisticResponse? =
             runBlocking {
-                entry = statisticCollection.findOne(Statistic::statisticRequest eq statisticRequest)
-            }
-            return entry?.statisticResponse
-        }
+                statisticCollection.findOne(Statistic::statisticRequest eq statisticRequest)
+            }?.statisticResponse
 
-        fun getHistory(start: Int, count: Int): List<StatisticRequest> {
-            val result: List<StatisticRequest>
+        fun getHistory(start: Int, count: Int): List<StatisticRequest> =
             runBlocking {
-                result = statisticCollection
+                statisticCollection
                     .projection(Statistic::statisticRequest)
                     .skip(start)
                     .limit(count)
                     .toList()
             }
-            return result
-        }
+
+        fun totalCount(): Int =
+            runBlocking {
+                statisticCollection.countDocuments().toInt()
+            }
     }
 }

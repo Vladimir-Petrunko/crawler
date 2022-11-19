@@ -25,7 +25,7 @@ fun Application.configureRouting() {
 
 
 fun Routing.configureWeb() {
-    get("*") {
+    get("{...}") {
         call.respondHtml(HttpStatusCode.OK, HTML::index)
     }
 
@@ -67,5 +67,9 @@ fun Route.configureGeneralApi() {
 
         val response = HistoryManager.getHistory(start, count)
         call.respond(HttpStatusCode.OK, response)
+    }
+
+    get("/get-total-count") {
+        call.respond(HttpStatusCode.OK, HistoryManager.totalCount())
     }
 }

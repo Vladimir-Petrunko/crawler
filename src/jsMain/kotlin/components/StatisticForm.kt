@@ -16,6 +16,7 @@ import react.dom.html.ReactHTML.ol
 import react.useState
 import model.StatisticRequest
 import model.StatisticResponse
+import utils.LOADER_SRC
 
 external interface StatisticFormProps : Props {
     var onContentChange: (StatisticResponse) -> Unit
@@ -25,19 +26,17 @@ external interface StatisticFormProps : Props {
 private var targetUrl = ""
 private var level = 0
 
-private const val LOADER_SRC = "https://i.gifer.com/origin/ae/ae84325701f6d97ac4ad7e7951ac9063_w200.webp"
-
 val StatisticForm = FC<StatisticFormProps> { props ->
-    var currentContent: StatisticResponse? by useState(null)
+    var currentResponse: StatisticResponse? by useState(null)
     var isLoading: Boolean by useState(false)
 
     props.onContentChange = { content ->
-        currentContent = content
+        currentResponse = content
         isLoading = false
     }
 
     props.onLoadStart = {
-        currentContent = null
+        currentResponse = null
         isLoading = true
     }
 
@@ -45,8 +44,6 @@ val StatisticForm = FC<StatisticFormProps> { props ->
         id = "crawl-form"
 
         label {
-            htmlFor = "url"
-
             + "Url:"
         }
 
@@ -54,6 +51,7 @@ val StatisticForm = FC<StatisticFormProps> { props ->
 
         input {
             name = "url"
+
             onChange = { event ->
                 targetUrl = event.target.value
             }
@@ -62,8 +60,6 @@ val StatisticForm = FC<StatisticFormProps> { props ->
         br()
 
         label {
-            htmlFor = "level"
-
             + "Level:"
         }
 
@@ -71,6 +67,7 @@ val StatisticForm = FC<StatisticFormProps> { props ->
 
         input {
             name = "level"
+
             onChange = { event ->
                 level = event.target.value.toInt()
             }
@@ -100,7 +97,7 @@ val StatisticForm = FC<StatisticFormProps> { props ->
                     it.preventDefault()
                     httpClient.request("/api/v1/save-history") {
                         parameter("request", JSON.stringify(StatisticRequest(targetUrl, level)))
-                        parameter("content", JSON.stringify(currentContent))
+                        parameter("content", JSON.stringify(currentResponse))
                     }
                 }
             }
@@ -110,7 +107,7 @@ val StatisticForm = FC<StatisticFormProps> { props ->
 
         div {
             ol {
-                for (word in currentContent?.topWorlds ?: emptyList()) {
+                for (word in currentResponse?.topWords ?: emptyList()) {
                     li {
                         + word
                     }
@@ -122,7 +119,7 @@ val StatisticForm = FC<StatisticFormProps> { props ->
             id = "imageBasket"
 
             if (!isLoading) {
-                for (path in currentContent?.images ?: emptySet()) {
+                for (path in currentResponse?.images ?: emptySet()) {
                     img {
                         src = path
                         width = 50.0

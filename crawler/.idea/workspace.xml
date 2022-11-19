@@ -6,13 +6,10 @@
   <component name="AutomaticModuleUnloader">
     <loaded-modules>
       <module name="template" />
-      <module name="template.test" />
       <module name="template.main" />
       <module name="template.jsMain" />
-      <module name="template.jsTest" />
       <module name="template.jvmMain" />
       <module name="template.commonMain" />
-      <module name="template.commonTest" />
     </loaded-modules>
   </component>
   <component name="BranchesTreeState">

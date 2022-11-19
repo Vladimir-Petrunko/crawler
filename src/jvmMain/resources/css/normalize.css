@@ -4,11 +4,11 @@
     padding: 0;
     box-sizing: border-box;
     text-align: center;
+    font-family: "Courier New", monospace;
 }
 
 html {
     height: 100%;
-    font-family: "Courier New", monospace;
     background-image: url(../img/background.jpg);
     background-size: cover;
 }
@@ -24,10 +24,7 @@ nav a {
     margin: 12px;
     padding: 12px;
     background-color: rgba(255, 255, 255, 0.2);
-    text-underline: none;
     border-radius: 12px;
-    font-style: italic;
-    font-family: "Futura", sans-serif;
 }
 
 nav a:visited {
@@ -60,17 +57,15 @@ input {
     margin: 12pt;
     width: 85%;
     border-radius: 5px;
-    font-family: "Courier New", monospace;
 }
 
 #historyList button {
-    padding: 6px;
+    padding: 12px;
     font-size: 12pt;
     color: white;
     margin: 4pt;
     width: 60%;
     border-radius: 5px;
-    font-family: "Courier New", monospace;
 }
 
 button:hover, nav a:hover {
@@ -94,11 +89,10 @@ button:active, nav a:active {
     width: 100px;
     height: 100px;
     margin: 5px;
-    border: 4px gray ridge;
+    border: 2px gray ridge;
 }
 
 #mainInfo, h2 {
-    font-family: "Arial", sans-serif;
     font-weight: bold;
     background-color: rgba(0, 0, 0, 0.2);
     padding: 10px;
@@ -107,6 +101,8 @@ button:active, nav a:active {
 
 img#loaderImage {
     border: none;
+    width: 100px;
+    height: 100px;
 }
 
 #historyContainer {
@@ -115,12 +111,26 @@ img#loaderImage {
 
 .historyItem {
     padding: 3px;
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: rgba(0, 0, 0, 0.35);
     border-radius: 3px;
-    margin: 6px;
+    margin: 18px;
+    width: auto;
 }
 
-.subHistoryItem {
-    background-color: rgba(0, 0, 0, 0.1);
-    margin: 3px;
+.historyItem:hover {
+    background-color: rgba(0, 0, 0, 0.55);
+    cursor: pointer;
+}
+
+.historyItem:active {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.disabled {
+    pointer-events: none;
+    cursor: not-allowed;
+    opacity: 0.65;
+    filter: alpha(opacity = 65);
+    -webkit-box-shadow: none;
+    box-shadow: none;
 }
