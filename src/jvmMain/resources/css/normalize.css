@@ -25,6 +25,7 @@ nav a {
     padding: 12px;
     background-color: rgba(255, 255, 255, 0.2);
     border-radius: 12px;
+    text-decoration: none;
 }
 
 nav a:visited {
@@ -41,7 +42,7 @@ button {
     border-radius: 5px;
 }
 
-#crawl-form {
+form, #crawl-form {
     background-color: rgba(0, 0, 0, 0.35);
     border-radius: 25px;
     margin-top: 15px;
@@ -133,4 +134,8 @@ img#loaderImage {
     filter: alpha(opacity = 65);
     -webkit-box-shadow: none;
     box-shadow: none;
+}
+
+#auth-header {
+    padding: 6px;
 }

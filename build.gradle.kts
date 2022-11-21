@@ -44,6 +44,10 @@ kotlin {
             dependencies {
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2")
+
+                // https://mvnrepository.com/artifact/commons-codec/commons-codec
+                implementation("commons-codec:commons-codec:1.15")
+
             }
         }
 
@@ -55,6 +59,10 @@ kotlin {
                 // https://ktor.io/docs/html-dsl.html
                 implementation("io.ktor:ktor-html-builder:$ktor_version")
                 implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:$ktx_html_version")
+
+                // https://ktor.io/docs/session-auth.html
+                implementation("io.ktor:ktor-auth:$ktor_version")
+                implementation("io.ktor:ktor-server-sessions:$ktor_version")
 
                 // https://ktor.io/docs/kotlin-serialization.html
                 implementation("io.ktor:ktor-serialization:$ktor_version")
@@ -90,16 +98,17 @@ kotlin {
                 // https://ktor.io/docs/getting-started-ktor-client.html
                 implementation("io.ktor:ktor-client-js:$ktor_version")
 
+                implementation("io.ktor:ktor-client-auth:$ktor_version")
+
                 // https://ktor.io/docs/json.html
                 implementation("io.ktor:ktor-client-serialization:$ktor_version")
             }
         }
-        val jsTest by getting
     }
 }
 
 application {
-    mainClass.set("ru.diamant.rabbit.application.ServerKt")
+    mainClass.set("application.ServerKt")
 }
 
 tasks.named<Copy>("jvmProcessResources") {

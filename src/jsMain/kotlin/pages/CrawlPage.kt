@@ -1,6 +1,7 @@
 package pages
 
 import components.StatisticForm
+import components.StatisticFormProps
 import react.*
 import react.dom.html.ReactHTML.h2
 

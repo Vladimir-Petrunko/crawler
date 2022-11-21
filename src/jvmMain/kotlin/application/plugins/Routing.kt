@@ -11,9 +11,12 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import application.templates.index
+import application.workers.AuthenticationManager
 import application.workers.HistoryManager
 import application.workers.StatisticWorker
 import model.StatisticRequest
+import model.UserCredentials
+import model.WrongUserCredentials
 
 @ExperimentalSerializationApi
 fun Application.configureRouting() {
@@ -37,19 +40,20 @@ fun Routing.configureWeb() {
 @ExperimentalSerializationApi
 fun Routing.configureApi() {
     route("/api/v1") {
-        configureGeneralApi()
+        configurePrivateApi()
+        configureAuthorizationApi()
     }
 }
 
 @ExperimentalSerializationApi
-fun Route.configureGeneralApi() {
+fun Route.configurePrivateApi() {
     get("/page-info") {
         val url = call.request.queryParameters["url"]!!
         val level = call.request.queryParameters["level"]!!.toInt()
         val request = StatisticRequest(url, level)
 
         val response = HistoryManager.getStatistics(request)
-                    ?: StatisticWorker.processAll(StatisticRequest(url, level))
+            ?: StatisticWorker.processAll(StatisticRequest(url, level))
 
         call.respond(HttpStatusCode.OK, response)
     }
@@ -71,5 +75,34 @@ fun Route.configureGeneralApi() {
 
     get("/get-total-count") {
         call.respond(HttpStatusCode.OK, HistoryManager.totalCount())
+    }
+}
+
+fun Route.configureAuthorizationApi() {
+    get("/login") {
+        val credentials = Json.decodeFromString<UserCredentials>(call.request.queryParameters["credentials"]!!)
+        if (AuthenticationManager.isValidUser(credentials)) {
+            AuthenticationManager.setCurrentUser(credentials.username)
+            call.respond(credentials)
+        } else {
+            call.respond(WrongUserCredentials)
+        }
+    }
+
+    get("/sign-in") {
+        val credentials = Json.decodeFromString<UserCredentials>(call.request.queryParameters["credentials"]!!)
+        if (credentials.username != null && !AuthenticationManager.hasUserWithUsername(credentials.username)) {
+            AuthenticationManager.putUser(credentials)
+            AuthenticationManager.setCurrentUser(credentials.username)
+            call.respond(credentials)
+        } else {
+            call.respond(WrongUserCredentials)
+        }
+    }
+
+    get("/logout") {
+        val username = AuthenticationManager.getCurrentUser()
+        AuthenticationManager.setCurrentUser(null)
+        call.respond(UserCredentials(username, null))
     }
 }
