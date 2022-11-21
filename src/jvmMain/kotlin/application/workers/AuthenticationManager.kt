@@ -47,9 +47,8 @@ class AuthenticationManager {
 
         fun setCurrentUser(userName: String?) =
             runBlocking {
-                if (userName == null) {
-                    currentUserCollection.drop()
-                } else {
+                currentUserCollection.drop()
+                if (userName != null) {
                     currentUserCollection.insertOne(CurrentUser(userName))
                 }
             }

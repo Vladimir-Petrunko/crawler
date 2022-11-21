@@ -63,6 +63,8 @@ fun Route.configurePrivateApi() {
         val content = call.request.queryParameters["content"]!!
 
         HistoryManager.saveStatistics(Json.decodeFromString(statisticRequest), Json.decodeFromString(content))
+
+        call.respond(200)
     }
 
     get("/get-history") {

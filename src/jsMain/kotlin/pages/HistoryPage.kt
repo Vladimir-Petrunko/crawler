@@ -3,6 +3,7 @@ package pages
 import api.httpClient
 import io.ktor.client.request.*
 import kotlinx.coroutines.launch
+import model.Statistic
 import react.FC
 import react.Props
 import react.dom.html.ReactHTML.div
@@ -10,8 +11,11 @@ import react.dom.html.ReactHTML.h2
 import react.dom.html.ReactHTML.button
 import react.useState
 import model.StatisticRequest
+import react.dom.html.ReactHTML
 import react.dom.html.ReactHTML.br
 import react.dom.html.ReactHTML.img
+import react.dom.html.ReactHTML.li
+import react.dom.html.ReactHTML.ol
 import react.dom.html.ReactHTML.span
 import utils.LOADER_SRC
 import kotlin.math.max
@@ -20,13 +24,14 @@ import kotlin.math.min
 const val pageSize = 3
 
 external interface HistoryPageProps : Props {
-    var onContentChange: (List<StatisticRequest>) -> Unit
+    var onContentChange: (List<Statistic>) -> Unit
     var onNewPage: (Int) -> Unit
     var setLoadingStatus: (Boolean) -> Unit
     var setTotalCount: (Int) -> Unit
+    var toggleVisibility: (StatisticRequest) -> Unit
 }
 
-suspend fun getQueryList(pageStart: Int, totalCount: Int): List<StatisticRequest> {
+suspend fun getQueryList(pageStart: Int, totalCount: Int): List<Statistic> {
     if (pageStart < 0 || pageStart >= totalCount) {
         return emptyList()
     }
@@ -41,9 +46,21 @@ suspend fun getTotalCount(): Int = httpClient.request("/api/v1/get-total-count")
 val HistoryPage = FC<HistoryPageProps> { props ->
     var pageStart: Int by useState(0)
     var totalCount: Int by useState(0)
-    var currentContent: List<StatisticRequest> by useState(emptyList())
+    var currentContent: List<Statistic> by useState(emptyList())
     var initialRender: Boolean by useState(false)
     var loading: Boolean by useState(true)
+    var visibleResponses: MutableSet<StatisticRequest> by useState(mutableSetOf())
+
+    props.toggleVisibility = { request ->
+        if (visibleResponses.contains(request)) {
+            visibleResponses.remove(request)
+        } else {
+            visibleResponses.add(request)
+        }
+        val temp = mutableSetOf<StatisticRequest>()
+        temp.addAll(visibleResponses)
+        visibleResponses = temp
+    }
 
     props.setTotalCount = { total ->
         totalCount = total
@@ -93,19 +110,50 @@ val HistoryPage = FC<HistoryPageProps> { props ->
                 src = LOADER_SRC
             }
         } else {
-            for (statisticRequest in currentContent) {
+            for (statistic in currentContent) {
                 div {
                     className = "historyItem"
 
                     div {
                         className = "subHistoryItem"
                         span {
-                            +"Url: ${statisticRequest.url}"
+                            +"Url: ${statistic.statisticRequest.url}"
                         }
                         br()
                         span {
-                            +"Level: ${statisticRequest.level}"
+                            +"Level: ${statistic.statisticRequest.level}"
                         }
+                    }
+
+                    if (visibleResponses.contains(statistic.statisticRequest)) {
+                        br()
+                        br()
+                        div {
+                            ol {
+                                for (word in statistic.statisticResponse.topWords) {
+                                    li {
+                                        +word
+                                    }
+                                }
+                            }
+                        }
+
+                        div {
+                            id = "imageBasket"
+
+                            for (path in statistic.statisticResponse.images) {
+                                img {
+                                    src = path
+                                    width = 50.0
+                                    height = 50.0
+                                }
+                            }
+
+                        }
+                    }
+
+                    onClick = {
+                        props.toggleVisibility(statistic.statisticRequest)
                     }
                 }
             }
@@ -154,7 +202,7 @@ val HistoryPage = FC<HistoryPageProps> { props ->
 }
 
 private fun hasPreviousPage(page: Int) = page > 0
-private fun hasNextPage(page: Int, totalCount: Int) = page + 1 < totalCount
+private fun hasNextPage(page: Int, totalCount: Int) = page + pageSize < totalCount
 private fun previousStart(page: Int) = max(0, page - pageSize)
 private fun previousEnd(page: Int) = max(0, page - 1)
 private fun nextStart(page: Int, totalCount: Int) = min(totalCount - 1, page + pageSize)

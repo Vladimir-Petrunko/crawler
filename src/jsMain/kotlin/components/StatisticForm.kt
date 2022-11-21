@@ -2,6 +2,7 @@ package components
 
 import api.httpClient
 import io.ktor.client.request.*
+import io.ktor.client.statement.*
 import kotlinx.coroutines.launch
 import react.FC
 import react.Props
@@ -21,23 +22,38 @@ import utils.LOADER_SRC
 external interface StatisticFormProps : Props {
     var onContentChange: (StatisticResponse) -> Unit
     var onLoadStart: () -> Unit
+    var onChangeSaveStatus: (SavedStatus) -> Unit
 }
 
 private var targetUrl = ""
 private var level = 0
 
+enum class SavedStatus(val representation: String) {
+    NOT_SAVED("Save to history!"),
+    SAVING("Saving..."),
+    SAVED("Saved!")
+}
+
 val StatisticForm = FC<StatisticFormProps> { props ->
     var currentResponse: StatisticResponse? by useState(null)
     var isLoading: Boolean by useState(false)
+    var savedStatus: SavedStatus by useState(SavedStatus.NOT_SAVED)
+    var hasLoadedSomething: Boolean by useState(false)
 
     props.onContentChange = { content ->
         currentResponse = content
         isLoading = false
+        hasLoadedSomething = true
+        savedStatus = SavedStatus.NOT_SAVED
     }
 
     props.onLoadStart = {
         currentResponse = null
         isLoading = true
+    }
+
+    props.onChangeSaveStatus = { newStatus ->
+        savedStatus = newStatus
     }
 
     div {
@@ -92,17 +108,23 @@ val StatisticForm = FC<StatisticFormProps> { props ->
         }
 
         button {
+            if (isLoading || savedStatus != SavedStatus.NOT_SAVED || !hasLoadedSomething) {
+                className = "disabled"
+            }
+
             onClick = {
                 ApplicationScope.launch {
+                    props.onChangeSaveStatus(SavedStatus.SAVING)
                     it.preventDefault()
-                    httpClient.request("/api/v1/save-history") {
+                    val response: Int = httpClient.request("/api/v1/save-history") {
                         parameter("request", JSON.stringify(StatisticRequest(targetUrl, level)))
                         parameter("content", JSON.stringify(currentResponse))
                     }
+                    props.onChangeSaveStatus(if (response == 200) SavedStatus.SAVED else SavedStatus.NOT_SAVED)
                 }
             }
 
-            + "Save to history..."
+            + savedStatus.representation
         }
 
         div {

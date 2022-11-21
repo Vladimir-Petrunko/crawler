@@ -42,7 +42,7 @@ button {
     border-radius: 5px;
 }
 
-form, #crawl-form {
+form, #crawl-form, #history-container {
     background-color: rgba(0, 0, 0, 0.35);
     border-radius: 25px;
     margin-top: 15px;
@@ -79,7 +79,7 @@ button:active, nav a:active {
 }
 
 #imageBasket, #historyList {
-    height: 300px;
+    height: 250px;
     scroll-margin: 15px;
     position: relative;
     overflow: auto;
@@ -106,8 +106,9 @@ img#loaderImage {
     height: 100px;
 }
 
-#historyContainer {
-    height: 300px;
+#history-container {
+    height: 400px;
+    overflow: auto;
 }
 
 .historyItem {
@@ -115,7 +116,8 @@ img#loaderImage {
     background-color: rgba(0, 0, 0, 0.35);
     border-radius: 3px;
     margin: 18px;
-    width: auto;
+    max-height: 200px;
+    overflow: auto;
 }
 
 .historyItem:hover {
@@ -137,5 +139,7 @@ img#loaderImage {
 }
 
 #auth-header {
+    background-color: rgba(0, 0, 0, 0.5);
+    font-weight: bold;
     padding: 6px;
 }
